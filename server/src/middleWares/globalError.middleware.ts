@@ -30,8 +30,14 @@ export const globalError = (err: ApiError, req: Request, res: Response, next: Ne
     if (process.env.NODE_ENV === "development") {
         sendErrorForDevelopment(res, err);
     } else {
-        if (err.name ==="JsonWebTokenError") err = jwtInvalidSigniture();
-        if (err.name ==="TokenExpiredError") err = TokenExpiredError();
+        if (err.name === "JsonWebTokenError") {
+            err = jwtInvalidSigniture();
+            return;
+        };
+        if (err.name === "TokenExpiredError") {
+            err = TokenExpiredError()
+            return;
+        };
         sendErrorForProduction(res, err);
     }
 }
