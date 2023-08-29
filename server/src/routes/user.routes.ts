@@ -15,13 +15,14 @@ import {
   deleteUserValidation,
   updateUserPasswordValidation
 } from "../utils/validation/user.validate";
+import { auth as protect , allowedTo } from "../controllers/auth.controller";
 
 export const router = express.Router();
 
+
+router.use(protect, allowedTo("admin", "superAdmin"));
 router.patch("/changePassword/:id" , updateUserPasswordValidation , updateUserPassword)
-
 router.route("/").post(createUserValidation, createUser).get(getUsers);
-
 router
   .route("/:id")
   .get(getUserValidation, getUser)

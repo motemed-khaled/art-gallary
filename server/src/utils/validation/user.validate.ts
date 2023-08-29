@@ -17,8 +17,6 @@ export const createUserValidation = [
         .withMessage("userImg required"),
     check("address").notEmpty()
         .withMessage("user address required"),
-    check("password").notEmpty()
-        .withMessage("password required"),
     check("role").optional(),
     validationMiddleware
 ];

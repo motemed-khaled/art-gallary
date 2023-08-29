@@ -6,9 +6,14 @@ import bcryptjs from "bcryptjs";
 import { userModel } from "../models/user.model";
 import { ApiError } from "../utils/apiError";
 import { normalizeUser } from "../utils/dto/user.dto";
+import { ExpressReq } from "../types/expressReq.interface";
 
 
-export const createUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+export const createUser = asyncHandler(async (req: ExpressReq, res: Response, next: NextFunction) => {
+    if (req.body.role === "admin" && req.user?.role==="admin") {
+        next(new ApiError("only superAdmin can create admin user", 401));
+        return;
+    }
     const user = await userModel.create(req.body);
     res.status(201).json({ status: "success", data: normalizeUser(user) });
 });
@@ -51,7 +56,8 @@ export const updateUserPassword = asyncHandler(async (req: Request, res: Respons
     const user = await userModel.findByIdAndUpdate(
         req.params.id,
         {
-            password:await bcryptjs.hash(req.body.password, 12)
+            password: await bcryptjs.hash(req.body.password, 12),
+            changePasswordTime:Date.now()
         },
         {new:true}
     );

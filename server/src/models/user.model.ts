@@ -29,12 +29,14 @@ const userSchema = new mongoose.Schema<UserDocument>({
     },
     password: {
         type: String,
-        required: [true, "password required"],
     },
     role: {
         type: String,
         enum: ["user", "admin", "superAdmin"],
         default:"user"
+    },
+    changePasswordTime: {
+        type:Date
     }
 }, { timestamps: true });
 

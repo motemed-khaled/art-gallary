@@ -8,6 +8,7 @@ export interface Usre{
     role: string;
     userImg: string;
     address: string;
+    changePasswordTime: Date;
 }
 
 export interface UserDocument extends Usre, Document{
