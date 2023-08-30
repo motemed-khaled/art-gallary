@@ -9,6 +9,9 @@ export interface Usre{
     userImg: string;
     address: string;
     changePasswordTime: Date;
+    resetPasswordCode: string;
+    resetCodeExpire: number;
+    resetCodeVerify: boolean;
 }
 
 export interface UserDocument extends Usre, Document{

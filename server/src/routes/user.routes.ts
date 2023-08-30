@@ -8,7 +8,7 @@ import {
   deleteUser,
   updateUserPassword,
   userImgProccessing,
-  uploadImg
+  uploadImg,
 } from "../controllers/user.controller";
 import {
   createUserValidation,
@@ -23,6 +23,8 @@ import { auth as protect, allowedTo } from "../controllers/auth.controller";
 import { getLoggedUser , updateLoggedUser , updateLogedUserPassword ,deleteLoggedUser } from "../controllers/loggedUser.controller";
 
 export const router = express.Router();
+
+
 
 router.use(protect);
 router.get("/getloggeduser", getLoggedUser, getUser);

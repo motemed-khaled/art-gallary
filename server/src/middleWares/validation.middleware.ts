@@ -5,6 +5,7 @@ export const validationMiddleware = (req: Request, res: Response, next: NextFunc
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         res.status(400).json({ errors: errors.array() });
+        return;
     }
     next();
 }

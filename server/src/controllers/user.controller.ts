@@ -13,9 +13,9 @@ import { uploadImage } from "../middleWares/uploadImg.middleware";
 
 
 export const uploadImg = uploadImage("userImg");
+
 export const userImgProccessing = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        console.log(req.file)
     if (req.file) {
       const fileName = `user-${uid()}-${Date.now()}.jpeg`;
       await sharp(req.file.buffer)

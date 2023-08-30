@@ -13,7 +13,7 @@ const multerOption = () => {
     if (file.mimetype.startsWith("image")) {
       cb(null, true);
     } else {
-      cb(null, false);
+      cb(new ApiError("suported only image" , 400) as null, false);
     }
   };
 
