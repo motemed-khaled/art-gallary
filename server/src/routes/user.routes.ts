@@ -6,23 +6,35 @@ import {
   getUser,
   updateUser,
   deleteUser,
-  updateUserPassword
+  updateUserPassword,
+  userImgProccessing,
+  uploadImg
 } from "../controllers/user.controller";
 import {
   createUserValidation,
   getUserValidation,
   updateUservalidation,
   deleteUserValidation,
-  updateUserPasswordValidation
+  updateUserPasswordValidation,
+  updateLoggedUservalidation,
+  updateLoggedUserPasswordValidation
 } from "../utils/validation/user.validate";
-import { auth as protect , allowedTo } from "../controllers/auth.controller";
+import { auth as protect, allowedTo } from "../controllers/auth.controller";
+import { getLoggedUser , updateLoggedUser , updateLogedUserPassword ,deleteLoggedUser } from "../controllers/loggedUser.controller";
 
 export const router = express.Router();
 
+router.use(protect);
+router.get("/getloggeduser", getLoggedUser, getUser);
+router.patch("/updateloggeduser", updateLoggedUservalidation, updateLoggedUser);
+router.patch("/updateloggeduserpassword", updateLoggedUserPasswordValidation, updateLogedUserPassword);
+router.delete("/deleteloggeduser", deleteLoggedUser, deleteUser);
 
-router.use(protect, allowedTo("admin", "superAdmin"));
+
+
+router.use(allowedTo("admin", "superAdmin"));
 router.patch("/changePassword/:id" , updateUserPasswordValidation , updateUserPassword)
-router.route("/").post(createUserValidation, createUser).get(getUsers);
+router.route("/").post(uploadImg , userImgProccessing , createUserValidation, createUser).get(getUsers);
 router
   .route("/:id")
   .get(getUserValidation, getUser)

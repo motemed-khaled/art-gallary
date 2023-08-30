@@ -1,3 +1,5 @@
+import path from "path";
+
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
@@ -6,13 +8,16 @@ import { globalError } from "./middleWares/globalError.middleware";
 import { mountRoutes } from "./routes/mount.routes";
 
 
+
 // connect db
 dbConnection();
 const app = express();
 
 //middleware
 app.use(express.json({ limit: "20kb" }));
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }))
+// to serve all image
+app.use(express.static(path.join(path.dirname("src/uploads"), "uploads")));
 
 //mount routes
 mountRoutes(app);

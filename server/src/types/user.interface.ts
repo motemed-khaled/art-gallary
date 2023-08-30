@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import { Document , Schema } from "mongoose";
 
 export interface Usre{
     name: string;
