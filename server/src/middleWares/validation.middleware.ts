@@ -8,4 +8,4 @@ export const validationMiddleware = (req: Request, res: Response, next: NextFunc
         return;
     }
     next();
-}
+};

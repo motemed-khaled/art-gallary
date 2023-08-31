@@ -75,4 +75,4 @@ export const allowedTo = (...roles: string[]) => asyncHandler(async (req: Expres
         return;
     }
     next();
-})
+});
