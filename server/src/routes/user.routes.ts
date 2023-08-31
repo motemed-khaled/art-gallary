@@ -8,7 +8,7 @@ import {
   deleteUser,
   updateUserPassword,
   userImgProccessing,
-  uploadImg,
+  uploadImg
 } from "../controllers/user.controller";
 import {
   createUserValidation,
