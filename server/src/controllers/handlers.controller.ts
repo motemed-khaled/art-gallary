@@ -50,15 +50,19 @@ export const updateOne =(modelName:Model< any >)=> asyncHandler(async (req: Expr
 });
 
 export const createOne = (modelName:Model< any >)=> asyncHandler(async (req: ExpressReq, res: Response, next: NextFunction) => {
-    const document = await categoryModel.create(req.body);
+    const document = await modelName.create(req.body);
     res.status(201).json({ status: "success", data: document });
 });
 
 export const getAll = (modelName:Model< any >)=> asyncHandler(async (req: ExpressReq, res: Response, next: NextFunction) => {
+    let filterObj = {};
+    if (req.filterObj) {
+        filterObj = req.filterObj;
+    }
+    
     const documentCount = await modelName.countDocuments();
-    const query = modelName.find();
 
-    const apiFeature = new Api_Feature(query, req.query)
+    const apiFeature = new Api_Feature(modelName.find(filterObj), req.query)
         .filter().sort().limitFields().search().pagination(documentCount);
     
     const { mongooseQuery, paginateResult } = apiFeature;

@@ -28,7 +28,7 @@ export const router = express.Router();
 
 router.use(protect);
 router.get("/getloggeduser", getLoggedUser, getUser);
-router.patch("/updateloggeduser", updateLoggedUservalidation, updateLoggedUser);
+router.patch("/updateloggeduser",uploadImg , userImgProccessing, updateLoggedUservalidation, updateLoggedUser);
 router.patch("/updateloggeduserpassword", updateLoggedUserPasswordValidation, updateLogedUserPassword);
 router.delete("/deleteloggeduser", deleteLoggedUser, deleteUser);
 
@@ -40,5 +40,5 @@ router.route("/").post(uploadImg , userImgProccessing , createUserValidation, cr
 router
   .route("/:id")
   .get(getUserValidation, getUser)
-  .patch(updateUservalidation, updateUser)
+  .patch(uploadImg , userImgProccessing,updateUservalidation, updateUser)
   .delete(deleteUserValidation, deleteUser);
