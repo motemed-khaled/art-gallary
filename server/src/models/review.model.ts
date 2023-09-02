@@ -71,4 +71,4 @@ reviewSchema.post(/^findOneAnd/, async function (doc) {
     if(doc) await doc.constructor.calculateAverageRationgAndCount(doc.product);
 });
 
-export const reviewModel = mongoose.model<ReviewDocument>("reviws", reviewSchema);
+export const reviewModel = mongoose.model<ReviewDocument>("reviews", reviewSchema);

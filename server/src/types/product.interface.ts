@@ -9,6 +9,7 @@ export interface Product{
     category: mongoose.Schema.Types.ObjectId;
     ratingsAverage: number;
     ratingsQuantity: number;
+    sold:number
 }
 
 export interface ProductDocument extends Document , Product{}

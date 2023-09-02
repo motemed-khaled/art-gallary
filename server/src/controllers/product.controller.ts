@@ -29,7 +29,7 @@ export const createProduct = createOne(productModel);
 
 export const getProducts = getAll(productModel);
 
-export const getProduct = getOne(productModel);
+export const getProduct = getOne(productModel , "reviews");
 
 export const updateProduct = updateOne(productModel);
 

@@ -20,8 +20,15 @@ export const deleteOne =(modelName:Model< any >)=> asyncHandler(async (req: Expr
     res.status(204).send();
 });
 
-export const getOne=(modelName:Model< any >)=> asyncHandler(async (req: ExpressReq, res: Response, next: NextFunction) => {
-    const document = await modelName.findById(req.params.id);
+export const getOne=(modelName:Model< any > ,populationOpt?:string)=> asyncHandler(async (req: ExpressReq, res: Response, next: NextFunction) => {
+    
+    // build query
+    let query =  modelName.findById(req.params.id);
+    if (populationOpt) {
+        query.populate(populationOpt)
+    }
+    
+    const document = await query;
 
     if (!document) {
         next(new ApiError(`no category for this id : ${req.params.id}`, 404));

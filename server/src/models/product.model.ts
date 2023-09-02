@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { ProductDocument } from "../types/product.interface";
+import { ReviewDocument } from "../types/review.interface";
+import { reviewModel } from "./review.model";
 
 const productSchema = new mongoose.Schema<ProductDocument>({
     name: {
@@ -36,8 +38,20 @@ const productSchema = new mongoose.Schema<ProductDocument>({
     ratingsQuantity: {
         type: Number,
         default: 0
+    },
+    sold: {
+        type: Number,
+        default:0
     }
-}, { timestamps: true });
+}, { timestamps: true  ,toObject: { virtuals: true },
+toJSON: { virtuals: true},});
+
+productSchema.virtual("reviews", {
+    ref: "reviews",
+    foreignField: "product",
+    localField: "_id",
+    justOne: false, // Set justOne to false to return an array of reviews
+});
 
 const setImageUrl = (doc: ProductDocument) => {
     if (doc.image) {
