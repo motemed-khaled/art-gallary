@@ -138,10 +138,11 @@ export const checkOutSession =  asyncHandler(async (req: ExpressReq, res: Respon
         customer_email: req.user.email,
         metadata: {
             address: req.user.address,
-            userId: req.user._id,
+            cartId: cart._id.toString(),
             shippingPrice:shippingPrice
         }
     });
+    console.log(req.user._id)
     res.status(200).json({ status: "success", session });
 });
 
@@ -149,14 +150,15 @@ const createOnlineOrder = async (session: any, req: ExpressReq) => {
     
     const metaData = session.metadata;
     const orderPrice = session.amount_total / 100;
-    console.log(metaData , orderPrice)
+    const userEmail = session.customer_email;
 
-    const cart = await cartModel.findOne({user:metaData.userId});
+    const cart = await cartModel.findById(metaData.cartId);
+    const user = await userModel.findOne({email:userEmail})
 
     const order = await orderModel.create({
         cartItems: cart.cartItems,
-        user: req.user._id,
-        shippingAdress: req.user.address,
+        user: user._id,
+        shippingAdress: metaData.address,
         totalOrederPrice:orderPrice,
         shippingPrice: metaData.shippingPrice,
         isPaid: true,
