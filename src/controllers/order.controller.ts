@@ -9,6 +9,7 @@ import { ApiError } from "../utils/apiError";
 import { cartModel } from "../models/cart.model";
 import { productModel } from "../models/product.model";
 import { getAll, getOne } from "./handlers.controller";
+import { userModel } from "../models/user.model";
 
 
 
@@ -137,8 +138,63 @@ export const checkOutSession =  asyncHandler(async (req: ExpressReq, res: Respon
         customer_email: req.user.email,
         metadata: {
             address: req.user.address,
-            userId : req.user._id
+            userId: req.user._id,
+            shippingPrice:shippingPrice
         }
     });
     res.status(200).json({ status: "success", session });
+});
+
+const createOnlineOrder = async (session: any, req: ExpressReq) => {
+    
+    const metaData = session.metadata;
+    const orderPrice = session.amount_total / 100;
+    console.log(metaData , orderPrice)
+
+    const cart = await cartModel.findOne({user:metaData.userId});
+
+    const order = await orderModel.create({
+        cartItems: cart.cartItems,
+        user: req.user._id,
+        shippingAdress: req.user.address,
+        totalOrederPrice:orderPrice,
+        shippingPrice: metaData.shippingPrice,
+        isPaid: true,
+        paidAt: Date.now(),
+        paymentMethod:"card"
+    });
+
+    if (order) {
+
+        const bulkOptions = cart.cartItems.map(item => ({
+            updateOne: {
+                filter: { _id: item.product },
+                update: { $inc: { stock: -item.quantity, sold: +item.quantity } }
+            },
+        }));
+
+        await productModel.bulkWrite(bulkOptions, {});
+        await cartModel.findOneAndDelete({ user: req.user._id });
+    }
+}
+
+export const webHookCheckOut =  asyncHandler(async (req: ExpressReq, res: Response, next: NextFunction) => {
+    const stripe = new Stripe(process.env.STRIPE_SECRET , {
+        apiVersion:"2023-08-16"
+    });
+    const sig = req.headers['stripe-signature'];
+
+    let event;
+
+    try {
+        event = stripe.webhooks.constructEvent(req.body, sig, process.env.WEBHOOK_STRIPE_SECRET);
+    } catch (err:any) {
+        res.status(400).send(`Webhook Error: ${err.message}`);
+        return;
+    }
+    
+    if (event.type === "checkout.session.completed") {
+        createOnlineOrder(event.data.object , req);
+    }
+    res.status(200).json({ recieved: true });
 });

@@ -11,6 +11,7 @@ dotenv.config();
 import { dbConnection } from "./config/database";
 import { globalError } from "./middleWares/globalError.middleware";
 import { mountRoutes } from "./routes/mount.routes";
+import { webHookCheckOut } from "./controllers/order.controller";
 
 // connect db
 dbConnection();
@@ -21,6 +22,9 @@ app.options("*", cors());
 
 // compress all response
 app.use(compression());
+
+// stripe webhook
+app.post("/webHook-checkout", express.raw({ type: 'application/json' }), webHookCheckOut);
 
 //middleware
 app.use(express.json({ limit: "20kb" }));
