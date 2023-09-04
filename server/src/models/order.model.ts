@@ -26,7 +26,7 @@ export const orderSchema = new mongoose.Schema<OrderDocument>({
     },
     shippingPrice: {
         type: Number,
-        default: 50
+        default: 0
     },
     totalOrederPrice: {
         type: Number

@@ -7,6 +7,9 @@ import asyncHandler from "express-async-handler";
 import { productModel } from "../models/product.model";
 import { deleteOne, getOne, updateOne, createOne, getAll } from "./handlers.controller";
 import { uploadImage } from "../middleWares/uploadImg.middleware";
+import { ExpressReq } from "../types/expressReq.interface";
+import { userModel } from "../models/user.model";
+import { sendEmail } from "../utils/sendEmail";
 
 export const uploadImg = uploadImage("image");
 
@@ -25,7 +28,28 @@ export const productImageProcceing = asyncHandler(
   }
 );
 
-export const createProduct = createOne(productModel);
+export const createProduct =  asyncHandler(async (req: ExpressReq, res: Response, next: NextFunction) => {
+  
+  const document = await productModel.create(req.body);
+  
+    const users = await userModel.find();
+
+    const emailPromises = users.map(user => {
+      const message = `Hi ${user.name} \n 
+      we recently added a new product : ${document.name} lets discover it .
+      `;
+      const mailOptions = {
+        email: user.email,
+        subject: "notification from Art-Gallary",
+        message: message
+      };
+
+      return sendEmail(mailOptions);
+    });
+  
+  await Promise.all(emailPromises);
+  res.status(201).json({ status: "success", data: document });
+});
 
 export const getProducts = getAll(productModel);
 

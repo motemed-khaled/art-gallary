@@ -8,11 +8,14 @@ import {
   getSpecificOrderCheck,
   updateIsDeliverd,
   updateIsPaid,
+  checkOutSession
 } from "../controllers/order.controller";
 import { auth as protect, allowedTo } from "../controllers/auth.controller";
 import { orderValidation } from "../utils/validation/order.validation";
 
 export const router = express.Router();
+
+router.get("/check-out-session", protect, allowedTo("user"), checkOutSession);
 
 router
   .route("/")
@@ -48,3 +51,5 @@ router.patch(
   orderValidation,
   updateIsPaid
 );
+
+

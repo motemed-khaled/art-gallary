@@ -1,5 +1,6 @@
 import { Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
+import stripe, { Stripe } from "stripe";
 
 
 import { ExpressReq } from "../types/expressReq.interface";
@@ -13,6 +14,10 @@ import { getAll, getOne } from "./handlers.controller";
 
 export const createCashOrder = asyncHandler(async (req: ExpressReq, res: Response, next: NextFunction) => {
     
+    // app setting
+    const shippingPrice = req.body.shippingPrice || 0;
+
+
     const cart = await cartModel.findOne({ user: req.user._id });
 
     if (!cart) {
@@ -24,11 +29,11 @@ export const createCashOrder = asyncHandler(async (req: ExpressReq, res: Respons
         cartItems: cart.cartItems,
         user: req.user._id,
         shippingAdress: req.user.address,
+        totalOrederPrice: cart.totalPrice + shippingPrice,
+        shippingPrice:shippingPrice
     });
 
     if (order) {
-        order.totalOrederPrice = cart.totalPrice + order.shippingPrice;
-        await order.save();
 
         const bulkOptions = cart.cartItems.map(item => ({
             updateOne: {
@@ -95,4 +100,45 @@ export const updateIsDeliverd =  asyncHandler(async (req: ExpressReq, res: Respo
     order.deliverdAt = new Date(Date.now());
     const updatedOrder = await order.save();
     res.status(200).json({ status: "success", data: updatedOrder });
+});
+
+// create stripe session
+export const checkOutSession =  asyncHandler(async (req: ExpressReq, res: Response, next: NextFunction) => {
+
+    // app setting 
+    const shippingPrice = req.body.shippingPrice || 0;
+
+    const cart = await cartModel.findOne({ user: req.user._id });
+    if (!cart) {
+        next(new ApiError("no cart in for this user", 404));
+        return;
+    }
+
+    const totalOrderPrice = cart.totalPrice + shippingPrice;
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET , {
+        apiVersion:"2023-08-16"
+    });
+    
+    const session = await stripe.checkout.sessions.create({
+        line_items: [{
+            price_data: {
+                currency: "egp",
+                unit_amount: totalOrderPrice * 100,
+                product_data: {
+                    name: req.user.name,
+                }
+            },
+            quantity: 1
+        }],
+        mode: 'payment',
+        success_url: `${req.protocol}://${req.get("host")}/orders`,
+        cancel_url: `${req.protocol}://${req.get("host")}/cart`,
+        customer_email: req.user.email,
+        metadata: {
+            address: req.user.address,
+            userId : req.user._id
+        }
+    });
+    res.status(200).json({ status: "success", session });
 });
