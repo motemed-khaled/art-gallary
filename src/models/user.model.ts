@@ -41,7 +41,14 @@ const userSchema = new mongoose.Schema<UserDocument>({
     },
     resetPasswordCode: String,
     resetCodeExpire: Number,
-    resetCodeVerify:Boolean
+    resetCodeVerify: Boolean,
+    signUpResetCode: String,
+    signUpResetCodeExpire: Number,
+    signUpVerify: {
+        type: Boolean,
+        default:false
+    }
+    
 }, { timestamps: true });
 
 const setImgUrl = (doc:UserDocument) => {

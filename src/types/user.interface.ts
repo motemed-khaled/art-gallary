@@ -12,6 +12,9 @@ export interface Usre{
     resetPasswordCode: string;
     resetCodeExpire: number;
     resetCodeVerify: boolean;
+    signUpResetCode: string;
+    signUpResetCodeExpire: number;
+    signUpVerify: boolean;
 }
 
 export interface UserDocument extends Usre, Document{
