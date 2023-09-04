@@ -142,7 +142,6 @@ export const checkOutSession =  asyncHandler(async (req: ExpressReq, res: Respon
             shippingPrice:shippingPrice
         }
     });
-    console.log(req.user._id)
     res.status(200).json({ status: "success", session });
 });
 
