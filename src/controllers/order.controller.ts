@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
-import stripe, { Stripe } from "stripe";
+import { Stripe } from "stripe";
 
 
 import { ExpressReq } from "../types/expressReq.interface";
@@ -176,7 +176,7 @@ const createOnlineOrder = async (session: any, req: ExpressReq) => {
         }));
 
         await productModel.bulkWrite(bulkOptions, {});
-        await cartModel.findOneAndDelete({ user: req.user._id });
+        await cartModel.findOneAndDelete({ user: user._id });
     }
 }
 
