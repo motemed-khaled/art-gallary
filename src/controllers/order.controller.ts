@@ -133,8 +133,8 @@ export const checkOutSession =  asyncHandler(async (req: ExpressReq, res: Respon
             quantity: 1
         }],
         mode: 'payment',
-        success_url: `${req.protocol}://${req.get("host")}/`,
-        cancel_url: `${req.protocol}://${req.get("host")}/users/cart`,
+        success_url: `https://art-gallary.onrender.com/users/shop`,
+        cancel_url: `https://art-gallary.onrender.com/users/cart`,
         customer_email: req.user.email,
         metadata: {
             address: req.user.address,
