@@ -47,8 +47,13 @@ const userSchema = new mongoose.Schema<UserDocument>({
     signUpVerify: {
         type: Boolean,
         default:false
-    }
-    
+    },
+    wishList: [{
+        product: {
+            type: mongoose.Schema.ObjectId,
+            ref: "products"
+        }
+    }]
 }, { timestamps: true });
 
 const setImgUrl = (doc:UserDocument) => {

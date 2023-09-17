@@ -8,6 +8,7 @@ import { ApiError } from "../utils/apiError";
 import { normalizeUser } from "../utils/dto/user.dto";
 import { ExpressReq } from "../types/expressReq.interface";
 
+
 export const getLoggedUser = asyncHandler(async (req: ExpressReq, res: Response, next: NextFunction) => {
     req.params.id = req.user?.id;
     next();
@@ -36,21 +37,17 @@ export const updateLoggedUser=asyncHandler(async (req: ExpressReq, res: Response
 });
 
 export const updateLogedUserPassword = asyncHandler(async (req: ExpressReq, res: Response, next: NextFunction) => {
-    const user = await userModel.findByIdAndUpdate(
-        req.user?.id,
-        {
-            password: await bcryptjs.hash(req.body.password, 12),
-            changePasswordTime: Date.now()
-        },
-        {
-            new: true
-        }
-    );
+   
+    const user = await userModel.findById(req.user.id).select("+password");;
 
-    if (!user) {
-        next(new ApiError("no user in this id", 404));
+    if (!user || !(await user.validatePassword(req.body.oldpassword))) {
+        next(new ApiError("invalid creditional", 401));
         return;
     }
+    
+    user.password = req.body.newPassword;
+    await user.save();
+
     res.status(200).json({ status: "success", data: normalizeUser(user) });
 });
 

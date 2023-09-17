@@ -56,7 +56,6 @@ export const signUp = asyncHandler(
       user.signUpResetCode = undefined;
       user.signUpResetCodeExpire = undefined;
       await user.save();
-
       next(
         new ApiError(
           "we have an error to sending email please try again later",
@@ -105,7 +104,6 @@ export const verifySignUp = asyncHandler(
 export const resendVerifySignUp = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email } = req.body;
-    
     const user = await userModel.findOne({ email: email });
 
     if (!user) {
@@ -150,7 +148,7 @@ export const resendVerifySignUp = asyncHandler(
 
     res
       .status(200)
-      .json({ status: "success", message: "code sent in your email from resend" });
+      .json({ status: "success", message: "code sent in your email please check it now !" });
   }
 );
 
@@ -158,7 +156,7 @@ export const login = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const user = await userModel
       .findOne({ email: req.body.email })
-      .select("+password");
+      .select("+password").populate("wishList.product");
 
     if (!user || !(await user.validatePassword(req.body.password))) {
       next(new ApiError("invalid creditional", 401));

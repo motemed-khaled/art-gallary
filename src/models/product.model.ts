@@ -32,8 +32,7 @@ const productSchema = new mongoose.Schema<ProductDocument>({
     },
     ratingsAverage: {
         type: Number,
-        min: [1, "Rating must be equal or above 1.0"],
-        max: [5, "Rating must be equal or below 5.0"],
+        default:0
     },
     ratingsQuantity: {
         type: Number,
@@ -42,6 +41,14 @@ const productSchema = new mongoose.Schema<ProductDocument>({
     sold: {
         type: Number,
         default:0
+    },
+    view: {
+        type: Number,
+        default:0
+    },
+    fav:{
+        type:Boolean,
+        default:false
     }
 }, { timestamps: true  ,toObject: { virtuals: true },
 toJSON: { virtuals: true},});

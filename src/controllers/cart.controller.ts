@@ -46,7 +46,11 @@ export const addProductToCart = asyncHandler(async (req: ExpressReq, res: Respon
 });
 
 export const getLoggedUserCart = asyncHandler(async (req: ExpressReq, res: Response, next: NextFunction) => {
-    const cart = await cartModel.findOne({ user: req.user._id });
+    const cart = await cartModel.findOne({ user: req.user._id }).populate({
+        path: 'cartItems.product',
+        select: 'name ratingsAverage price stock image',
+    });
+    
     if (!cart) {
         next(new ApiError("no cart for exist user", 404));
         return;
@@ -77,13 +81,16 @@ export const deleteUserCart = asyncHandler(async (req: ExpressReq, res: Response
 
 export const updateUserCartQuantity = asyncHandler(async (req: ExpressReq, res: Response, next: NextFunction) => {
     const { quantity } = req.body;
-    const cart = await cartModel.findOne({ user: req.user._id });
+    const cart = await cartModel.findOne({ user: req.user._id }).populate({
+        path: 'cartItems.product',
+        select: ' name ratingsAverage price stock image',
+    });
     if (!cart) {
         next(new ApiError("no cart for this user", 404));
         return;
     }
 
-    const cartItemIndex = cart.cartItems.findIndex(pro => pro.product.toString() === req.params.id);
+    const cartItemIndex = cart.cartItems.findIndex((pro:any) => pro.product._id.toString() === req.params.id);
     if (cartItemIndex > -1) {
         cart.cartItems[cartItemIndex].quantity = quantity;
     } else {

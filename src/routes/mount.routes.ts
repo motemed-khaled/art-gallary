@@ -6,6 +6,7 @@ import { router as productRoutes } from "./product.routes";
 import { router as reviewRoutes } from "./review.routes";
 import { router as cartRoutes } from "./cart.routes";
 import { router as orderRoutes } from "./order.routes";
+import { router as whisListRoutes } from "./whishList.routes";
 
 
 export const mountRoutes = (app: Application) => {
@@ -16,4 +17,5 @@ export const mountRoutes = (app: Application) => {
     app.use("/api/v1/review", reviewRoutes);
     app.use("/api/v1/cart", cartRoutes);
     app.use("/api/v1/order", orderRoutes);
+    app.use("/api/v1/whishList", whisListRoutes);
 };

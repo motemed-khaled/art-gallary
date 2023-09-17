@@ -7,11 +7,9 @@ import { productModel } from "./product.model";
 const reviewSchema = new mongoose.Schema<ReviewDocument>({
     title: {
         type: String,
-        required: [true, "comment is required"]
     },
     rating: {
         type: Number,
-        required: [true, "rating required"],
         min: [1, "min rating is 1.0"],
         max: [5, "max rating is 5.0"],
     },

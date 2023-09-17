@@ -22,7 +22,7 @@ export const createCashOrder = asyncHandler(async (req: ExpressReq, res: Respons
     const cart = await cartModel.findOne({ user: req.user._id });
 
     if (!cart) {
-        next(new ApiError("no cart for this user", 404));
+        next(new ApiError("No cart for You", 404));
         return;
     }
 
@@ -133,8 +133,8 @@ export const checkOutSession =  asyncHandler(async (req: ExpressReq, res: Respon
             quantity: 1
         }],
         mode: 'payment',
-        success_url: `${req.protocol}://${req.get("host")}/orders`,
-        cancel_url: `${req.protocol}://${req.get("host")}/cart`,
+        success_url: `${req.protocol}://${req.get("host")}/`,
+        cancel_url: `${req.protocol}://${req.get("host")}/users/cart`,
         customer_email: req.user.email,
         metadata: {
             address: req.user.address,
@@ -197,5 +197,6 @@ export const webHookCheckOut =  asyncHandler(async (req: ExpressReq, res: Respon
     if (event.type === "checkout.session.completed") {
         createOnlineOrder(event.data.object , req);
     }
+    console.log(true)
     res.status(200).json({ recieved: true });
 });

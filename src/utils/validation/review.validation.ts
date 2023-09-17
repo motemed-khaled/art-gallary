@@ -6,9 +6,9 @@ import { reviewModel } from "../../models/review.model";
 
 
 export const createReviewValidation = [
-    check("title").notEmpty()
+    check("title").optional().notEmpty()
         .withMessage("review comment required"),
-    check("rating")
+    check("rating").optional()
         .notEmpty().withMessage("rating required")
         .isFloat({ min: 1, max: 5 }).withMessage("rating value must be between 1.0 and 5.0"),
     check("product").isMongoId()

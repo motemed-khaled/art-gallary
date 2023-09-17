@@ -78,11 +78,11 @@ export const updateLoggedUservalidation = [
 ];
 
 export const updateLoggedUserPasswordValidation = [
-    check("password").notEmpty()
+    check("newPassword").notEmpty()
         .withMessage("password required"),
     check("confirmPassword").custom((val: string, { req }) => {
-        if (val != req.body.password) {
-            throw new Error("Passord Confirmation incorrect")
+        if (val != req.body.newPassword) {
+            throw new Error("new password Confirmation incorrect")
         } else {
             return true
         }

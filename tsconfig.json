@@ -9,6 +9,7 @@
         "strict": true,
         "strictNullChecks": false,
         "forceConsistentCasingInFileNames": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "noImplicitAny": true
     }
 }

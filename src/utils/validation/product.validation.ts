@@ -7,11 +7,11 @@ export const createProductValidation = [
     check("name").notEmpty()
         .withMessage("product name required")
         .isLength({ min: 4 }).withMessage("very short name")
-        .isLength({ max: 20 }).withMessage("very long name"),
+        .isLength({ max: 30}).withMessage("very long name"),
     check("description").notEmpty()
         .withMessage("description is required")
-        .isLength({ min: 10 }).withMessage("very short dexcription")
-        .isLength({ max: 50 }).withMessage("very long dexcription"),
+        .isLength({ min: 50 }).withMessage("very short dexcription")
+        .isLength({ max: 300 }).withMessage("very long dexcription"),
     check("price").notEmpty()
         .withMessage("price is required")
         .isNumeric().withMessage("price must be a number"),
@@ -40,11 +40,11 @@ export const updateProductValidation = [
     check("name").optional().notEmpty()
         .withMessage("product name required")
         .isLength({ min: 4 }).withMessage("very short name")
-        .isLength({ max: 20 }).withMessage("very long name"),
+        .isLength({ max: 30 }).withMessage("very long name"),
     check("description").optional().notEmpty()
         .withMessage("description is required")
-        .isLength({ min: 10 }).withMessage("very short dexcription")
-        .isLength({ max: 50 }).withMessage("very long dexcription"),
+        .isLength({ min: 50 }).withMessage("very short dexcription")
+        .isLength({ max:300}).withMessage("very long dexcription"),
     check("price").optional().notEmpty()
         .withMessage("price is required")
         .isNumeric().withMessage("price must be a number"),
@@ -74,6 +74,12 @@ export const deleteProductValidation = [
 ];
 
 export const getProductValidation = [
+    check("id").isMongoId()
+        .withMessage("invalid id format"),
+    validationMiddleware
+];
+
+export const updateViewValidation = [
     check("id").isMongoId()
         .withMessage("invalid id format"),
     validationMiddleware

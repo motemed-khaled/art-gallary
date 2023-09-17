@@ -60,14 +60,14 @@ export class Api_Feature{
 
     pagination(documentCount:number): this {
         const page:number = parseInt(this.queryString.page) || 1;
-        const limit:number = parseInt(this.queryString.limit) || 5;
+        const limit:number = parseInt(this.queryString.limit) || 6;
         const skip:number = (page - 1) * limit;
         const endPageIndex:number = page * limit;
 
         const pagination:Partial<Pagination> = {};
         pagination.currentage = page;
         pagination.limit = limit;
-        pagination.numberOfPages =Math.ceil( documentCount / limit);
+        pagination.numberOfPages = Math.ceil(documentCount / limit);
         if (endPageIndex < documentCount) {
             pagination.next = page + 1;
         }

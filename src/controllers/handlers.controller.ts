@@ -31,7 +31,7 @@ export const getOne=(modelName:Model< any > ,populationOpt?:string)=> asyncHandl
     const document = await query;
 
     if (!document) {
-        next(new ApiError(`no category for this id : ${req.params.id}`, 404));
+        next(new ApiError(`no document for this id : ${req.params.id}`, 404));
         return;
     }
 

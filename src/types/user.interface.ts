@@ -1,4 +1,4 @@
-import { Document , Schema } from "mongoose";
+import mongoose, { Document , Schema } from "mongoose";
 
 export interface Usre{
     name: string;
@@ -15,6 +15,9 @@ export interface Usre{
     signUpResetCode: string;
     signUpResetCodeExpire: number;
     signUpVerify: boolean;
+    wishList: [{
+        product:mongoose.Schema.Types.ObjectId
+    }]
 }
 
 export interface UserDocument extends Usre, Document{

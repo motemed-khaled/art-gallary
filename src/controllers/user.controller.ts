@@ -33,12 +33,16 @@ export const userImgProccessing = asyncHandler(
 
 export const getUsers = getAll(userModel);
 
-export const getUser = getOne(userModel);
+export const getUser = getOne(userModel ,'wishList.product');
 
 export const deleteUser = deleteOne(userModel);
 
 export const updateUser = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: ExpressReq, res: Response, next: NextFunction) => {
+    if ((req.body.role === "admin" || req.body.role === "superAdmin")  && req.user?.role === "admin") {
+      next(new ApiError("only superAdmin can create admin user", 401));
+      return;
+    }
     const user = await userModel.findByIdAndUpdate(
       req.params.id,
       {
@@ -47,6 +51,7 @@ export const updateUser = asyncHandler(
         phone: req.body.phone,
         address: req.body.address,
         role: req.body.role,
+        userImg:req.body.userImg
       },
       { new: true }
     );
@@ -80,7 +85,7 @@ export const updateUserPassword = asyncHandler(
 
 export const createUser = asyncHandler(
   async (req: ExpressReq, res: Response, next: NextFunction) => {
-    if (req.body.role === "admin" && req.user?.role === "admin") {
+    if ((req.body.role === "admin" || req.body.role === "superAdmin") && req.user?.role === "admin") {
       next(new ApiError("only superAdmin can create admin user", 401));
       return;
     }
