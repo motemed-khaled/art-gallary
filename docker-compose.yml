@@ -1,0 +1,22 @@
+version: '3'
+services:
+  artgallary-app:
+    image: motemedkhaled/art-gallary-app
+    env_file:
+      - ./.env
+    deploy:
+      replicas: 4
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - artgallary-app
